@@ -1,14 +1,22 @@
-import { useState } from "react";
-import Home from "./pages/home";
-import "./App.css";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/home"; // Assuming Home is in the correct path
+import Environmental from "./pages/Environmental";
+import Social from "./pages/Social";
+import Governance from "./pages/Governance";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <Home />
-    </>
+    <Router>
+      <Routes>
+        {/* Define all your routes here */}
+        <Route path="/" element={<Home />} />
+        <Route path="/environmental" element={<Environmental />} />
+        <Route path="/social" element={<Social />} />
+        <Route path="/governance" element={<Governance />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -11,7 +11,7 @@ const db = mysql.createConnection({
     host: 'svc-69727c1f-81cc-47e6-bd46-d0f87b891b64-dml.aws-virginia-7.svc.singlestore.com',
     port: 3306,
     user: 'admin',
-    password: '',
+    password: process.env.PASSWORD,
     database: 'EGSV',
 });
 
@@ -49,7 +49,9 @@ const generateTextEmbedding = async (text) => {
 // Function to query the database with the embedding
 const querySemanticMatches = async (embedding) => {
     const query = `
-        SELECT text, dot_product(vector, JSON_ARRAY_PACK(?)) AS score
+        SELECT text,
+               (dot_product(vector, JSON_ARRAY_PACK(?)) / 
+                (LENGTH(vector) * LENGTH(JSON_ARRAY_PACK(?)))) AS score
         FROM myvectortable
         ORDER BY score DESC
         LIMIT 5;
@@ -57,7 +59,7 @@ const querySemanticMatches = async (embedding) => {
 
     try {
         // Perform the query and get the top 5 results
-        const result = await executeQuery(query, [JSON.stringify(embedding)]);
+        const result = await executeQuery(query, [JSON.stringify(embedding), JSON.stringify(embedding)]);
         return result;
     } catch (error) {
         console.error('Error querying semantic matches:', error);

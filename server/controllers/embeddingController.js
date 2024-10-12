@@ -2,11 +2,13 @@ import { HfInference } from '@huggingface/inference';
 import dotenv from 'dotenv';
 import mysql from 'mysql2';
 
+dotenv.config();
+
 const db = mysql.createConnection({
     host: 'svc-69727c1f-81cc-47e6-bd46-d0f87b891b64-dml.aws-virginia-7.svc.singlestore.com',
     port: 3306,
     user: 'admin',
-    password: '',
+    password: process.env.PASSWORD,
     database: 'EGSV',
 });
 
@@ -21,7 +23,7 @@ function executeQuery(query, params = []) {
     });
 }
 
-dotenv.config();
+
 const hf = new HfInference(process.env.HF_TOKEN);
 
 // Function to handle database insertion

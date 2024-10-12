@@ -1,26 +1,81 @@
 import { HfInference } from '@huggingface/inference';
 import dotenv from 'dotenv';
+import mysql from 'mysql2';
+
+const db = mysql.createConnection({
+    host: 'svc-69727c1f-81cc-47e6-bd46-d0f87b891b64-dml.aws-virginia-7.svc.singlestore.com',
+    port: 3306,
+    user: 'admin',
+    password: '',
+    database: 'EGSV',
+});
+
+function executeQuery(query, params = []) {
+    return new Promise((resolve, reject) => {
+        db.query(query, params, (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results);
+        });
+    });
+}
 
 dotenv.config();
 const hf = new HfInference(process.env.HF_TOKEN);
 
-export const generateTextEmbedding = async (req, res) => {
-    const { text } = req.body;
+// Function to handle database insertion
+const insertEmbeddingIntoDB = async (text, embedding, name) => {
+    const query = `
+        INSERT INTO myvectortable (text, vector, id) 
+        VALUES (?, JSON_ARRAY_PACK(?), ?);
+    `;
 
-    if (!text) {
+    console.log('Preparing to execute query:', {
+        text,
+        vector: JSON.stringify(embedding),
+        name
+    });
+
+    try {
+        const result = await executeQuery(query, [text, JSON.stringify(embedding), name]);
+        return result;
+    } catch (error) {
+        console.error('Error inserting record:', error);
+        throw new Error('Error inserting record');
+    }
+};
+
+export const generateTextEmbedding = async (req, res) => {
+    const { text, name } = req.body;
+
+    if (!text || !name) {
         return res.status(400).json({ error: 'Text required' });
     }
 
+    let embedding; // Declare the variable here
     try {
-        const embedding = await hf.featureExtraction({
-            model: 'intfloat/e5-small-v2',
+        embedding = await hf.featureExtraction({
+            model: 'sentence-transformers/average_word_embeddings_glove.6B.300d',
             inputs: text,
         });
 
-        console.log('Embedding:', embedding);
-        res.status(200).json({ embedding });
+        // Optional: Log the generated embedding for debugging
+        console.log('Generated embedding:', embedding);
     } catch (error) {
         console.error('Error generating embedding:', error);
-        res.status(500).json({ error: 'Failed to generate embedding' });
+        return res.status(500).json({ error: 'Failed to generate embedding' });
+    }
+
+    // Now the embedding is guaranteed to be defined if no error occurred
+    try {
+        const result = await insertEmbeddingIntoDB(text, embedding, name); // Call the new function
+
+        res.status(201).json({
+            message: 'Record inserted successfully',
+            insertedId: result.insertId // Return the ID of the inserted row
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Error inserting record', details: error.message });
     }
 };

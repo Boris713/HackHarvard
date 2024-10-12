@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import Header from "../components/header";
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 function Home() {
   return (
@@ -8,7 +9,7 @@ function Home() {
         <Header />
         {/* header here */}
         <div>
-            <p>EcoTrackr</p>
+            <p>Welcome to EcoTrackr!!</p>
         </div>
         {/* body here */}
         {/* add uploading image here also */}

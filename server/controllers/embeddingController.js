@@ -18,7 +18,7 @@ export const generateTextEmbedding = async (req, res) => {
         });
 
         console.log('Embedding:', embedding);
-        res.status(200).json({ message: 'Embedding generated and logged' });
+        res.status(200).json({ embedding });
     } catch (error) {
         console.error('Error generating embedding:', error);
         res.status(500).json({ error: 'Failed to generate embedding' });

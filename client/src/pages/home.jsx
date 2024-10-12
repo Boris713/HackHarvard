@@ -18,3 +18,5 @@ function Home() {
 }
 
 export default Home;
+// search bar for companies hide elsewhere 
+// top total 

@@ -1,10 +1,11 @@
 import React from "react";
 import { useState } from "react";
+import Header from "../components/header";
 
 function Home() {
   return (
     <div>
-        <div></div> 
+        <Header />
         {/* header here */}
         <div>
             <p>EcoTrackr</p>

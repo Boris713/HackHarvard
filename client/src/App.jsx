@@ -6,6 +6,7 @@ import Environmental from "./pages/environmental";
 import Header from "./components/header"; // Import Header
 import Sidebar from "./components/sidebar"; // Import Sidebar
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Portfolio from "./pages/portfolio";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           marginLeft: "250px", // Width of the sidebar
           paddingTop: "60px", // Height of the header
           paddingLeft: "20px", // Optional padding for content
+          borderLeft: "1px solid #ccc", // Adds a thin gray border to the left
+
         }}
       >
         <div className="container">
@@ -29,6 +32,7 @@ function App() {
             {/* Define all your routes here */}
             <Route path="/" element={<Home />} />
             <Route path="/environmental" element={<Environmental />} />
+            <Route path="/portfolio" element={<Portfolio/>}></Route>
           </Routes>
         </div>
       </div>

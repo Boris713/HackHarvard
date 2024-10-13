@@ -1,4 +1,3 @@
-
 import { HfInference } from '@huggingface/inference';
 import dotenv from 'dotenv';
 import mysql from 'mysql2';
@@ -26,23 +25,25 @@ function executeQuery(query, params = []) {
     });
 }
 
-
-
 // Function to generate text embedding using Hugging Face
 const generateTextEmbedding = async (text) => {
-    let embedding; // Declare the variable here
+    let embedding;
     try {
         embedding = await hf.featureExtraction({
             model: 'sentence-transformers/average_word_embeddings_glove.6B.300d',
             inputs: text,
         });
 
-        // Optional: Log the generated embedding for debugging
+        // If the embedding is nested (e.g., [[number, number, ...]]), extract the inner array
+        if (Array.isArray(embedding) && Array.isArray(embedding[0])) {
+            embedding = embedding[0];
+        }
+
         console.log('Generated embedding:', embedding);
-        return embedding
+        return embedding;
     } catch (error) {
         console.error('Error generating embedding:', error);
-        return res.status(500).json({ error: 'Failed to generate embedding' });
+        throw new Error('Failed to generate embedding');
     }
 };
 
@@ -70,28 +71,51 @@ const querySemanticMatches = async (embedding) => {
     }
 };
 
+// Controller function for estimating sustainability score
+export const estimateSustainabilityScore = async (req, res) => {
+    const { description } = req.body;
 
-// Create a new endpoint for semantic search
-export const semanticSearch = async (req, res) => {
-    const { text } = req.body;
-
-    if (!text) {
-        return res.status(400).json({ error: 'Text input is required' });
+    if (!description) {
+        return res.status(400).json({ error: 'Company description is required' });
     }
 
     try {
         // Step 1: Generate the text embedding for user input
-        const embedding = await generateTextEmbedding(text);
+        const embedding = await generateTextEmbedding(description);
 
         // Step 2: Query the database with the generated embedding
         const results = await querySemanticMatches(embedding);
 
-        // Step 3: Return the results to the client
+        if (results.length === 0) {
+            return res.status(200).json({
+                message: 'No similar companies found.',
+                estimated_score: null,
+                companies_used: [],
+            });
+        }
+
+        // Step 3: Convert environmental_score to number and calculate the average
+        const totalScore = results.reduce((acc, company) => {
+            const score = parseFloat(company.environmental_score);
+            return acc + score;
+        }, 0);
+        const averageScore = totalScore / results.length;
+
+        // Round the averageScore to two decimal places without converting to string
+        const roundedAverageScore = Math.round((averageScore + Number.EPSILON) * 100) / 100;
+
+        // Step 4: Return the estimated score and the company descriptions
         res.status(200).json({
-            message: 'Query successful',
-            results,
+            message: 'Estimation successful',
+            estimated_score: roundedAverageScore, // Now a number
+            companies_used: results.map((company) => ({
+                name: company.id,
+                summary: company.text,
+                environmental_score: parseFloat(company.environmental_score), // Ensure it's a number
+            })),
         });
     } catch (error) {
+        console.error('Error in estimateSustainabilityScore:', error);
         res.status(500).json({ error: 'An error occurred', details: error.message });
     }
 };

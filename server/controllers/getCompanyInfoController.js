@@ -266,3 +266,21 @@ export const updatePersonalizedSustainabilityScore = async (userID) => {
         throw new Error('Error updating personalized sustainability score.');
     }
 };
+
+export const getUserProfile = async (req, res) => {
+    const userID = req.params.ID;
+    const query = `SELECT personalized_sustainability_score FROM user_profiles WHERE ID = ?;`;
+  
+    try {
+      const result = await executeQuery(query, [userID]);
+      if (result.length === 0) {
+        return res.status(404).json({ message: 'User profile not found' });
+      }
+  
+      res.status(200).json(result[0]);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      res.status(500).json({ message: 'Error fetching user profile.' });
+    }
+  };
+  

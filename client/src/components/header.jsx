@@ -1,6 +1,5 @@
-import { useState } from "react";
-import Sidebar from "./sidebar"; // Import Sidebar component
-import "../index.css";
+import React, { useState } from "react";
+import "../index.css"; // Ensure your custom styles are imported
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,43 +9,30 @@ export default function Header() {
   };
 
   return (
-    <>
-      {/* Sidebar Navigation */}
-      <Sidebar />
+    <header
+      className="bg-primary text-white fixed-top w-100"
+      style={{ zIndex: "1000", height: "60px" }}
+    >
+      <div className="container h-100">
+        <div className="row align-items-center h-100">
+          {/* EcoTrackr title in the center */}
+          <div className="col text-center">
+            <h1 className="h3">EcoTrackr</h1>
+          </div>
 
-      {/* Bootstrap Header */}
-      <header className="bg-primary text-white fixed-top" style={{ marginLeft: '250px', zIndex: '10', width: 'calc(100% - 250px)' }}>
-        <div className="container">
-          <div className="row align-items-center py-3">
-            
-            {/* EcoTrackr title in the center */}
-            <div className="col text-center">
-              <h1 className="h3">EcoTrackr</h1>
-            </div>
-
-            {/* Search bar in the center */}
-            <div className="col d-flex justify-content-end">
-              <input
-                type="text"
-                placeholder="Search companies..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="form-control"
-                style={{ maxWidth: '250px' }}
-              />
-            </div>
+          {/* Search bar on the right */}
+          <div className="col d-flex justify-content-end">
+            <input
+              type="text"
+              placeholder="Search companies..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="form-control"
+              style={{ maxWidth: "250px" }}
+            />
           </div>
         </div>
-      </header>
-
-      {/* Main content shifted to the right to avoid overlapping with the sidebar */}
-      <div style={{ marginLeft: '250px', paddingTop: '80px' }}>
-        {/* Your main content goes here */}
-        <div className="container">
-          <h2>Welcome to EcoTrackr</h2>
-          <p>Use the navigation links on the left to explore different sections.</p>
-        </div>
       </div>
-    </>
+    </header>
   );
 }

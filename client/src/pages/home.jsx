@@ -1,22 +1,33 @@
+// src/pages/Home.js
 import React from "react";
-import { useState } from "react";
-import Header from "../components/header";
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Header from "../components/header"; // Ensure correct casing
+import Sidebar from "../components/sidebar"; // Ensure correct casing
 
 function Home() {
   return (
-    <div>
-        <Header />
-        {/* header here */}
-        <div>
-            <p>Welcome to EcoTrackr!!</p>
+    <>
+      {/* Header */}
+      <Header />
+
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div
+        style={{
+          marginLeft: "250px", // Width of the sidebar
+          paddingTop: "60px", // Height of the header
+          paddingLeft: "20px", // Optional padding for content
+        }}
+      >
+        <div className="container">
+          <h2>Welcome to EcoTrackr</h2>
+          <p>Use the navigation links on the left to explore different sections.</p>
+          {/* Add uploading image here also */}
         </div>
-        {/* body here */}
-        {/* add uploading image here also */}
-    </div>
+      </div>
+    </>
   );
 }
 
 export default Home;
-// search bar for companies hide elsewhere 
-// top total 

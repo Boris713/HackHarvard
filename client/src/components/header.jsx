@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
-import NavSelection from "./navSelection"; // Assuming NavSelection is your custom button component
 import { useState } from "react";
+import Sidebar from "./sidebar"; // Import Sidebar component
 import "../index.css";
 
 export default function Header() {
@@ -11,42 +10,43 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-primary text-primary-foreground w-full fixed top-0 z-10">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          
-          {/* Empty div to push EcoTrackr to the middle */}
-          <div className="flex-1"></div>
+    <>
+      {/* Sidebar Navigation */}
+      <Sidebar />
 
-          {/* EcoTrackr title in the middle */}
-          <div className="flex-1 text-center">
-            <h1 className="text-2xl font-bold">EcoTrackr</h1>
-          </div>
+      {/* Bootstrap Header */}
+      <header className="bg-primary text-white fixed-top" style={{ marginLeft: '250px', zIndex: '10', width: 'calc(100% - 250px)' }}>
+        <div className="container">
+          <div className="row align-items-center py-3">
+            
+            {/* EcoTrackr title in the center */}
+            <div className="col text-center">
+              <h1 className="h3">EcoTrackr</h1>
+            </div>
 
-          {/* Search bar and navigation links on the right */}
-          <div className="flex-1 flex justify-end items-center space-x-4">
-            {/* Search Bar */}
-            <input
-              type="text"
-              placeholder="Search companies..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="border border-gray-300 p-2 rounded-md"
-            />
-
-            {/* Navigation links (Env, Soc, Gov) */}
-            <NavSelection>
-              <Link to="/environmental">Env</Link>
-            </NavSelection>
-            <NavSelection>
-              <Link to="/social">Soc</Link>
-            </NavSelection>
-            <NavSelection>
-              <Link to="/governance">Gov</Link>
-            </NavSelection>
+            {/* Search bar in the center */}
+            <div className="col d-flex justify-content-end">
+              <input
+                type="text"
+                placeholder="Search companies..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="form-control"
+                style={{ maxWidth: '250px' }}
+              />
+            </div>
           </div>
         </div>
+      </header>
+
+      {/* Main content shifted to the right to avoid overlapping with the sidebar */}
+      <div style={{ marginLeft: '250px', paddingTop: '80px' }}>
+        {/* Your main content goes here */}
+        <div className="container">
+          <h2>Welcome to EcoTrackr</h2>
+          <p>Use the navigation links on the left to explore different sections.</p>
+        </div>
       </div>
-    </header>
+    </>
   );
 }

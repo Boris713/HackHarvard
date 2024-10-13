@@ -9,23 +9,23 @@ import './ScoreRing.css'; // Optional: For additional styling
 
 // Helper function to determine the color based on percentage
 const getColor = (percentage) => {
-  if (percentage >= 70) {
-    return '#4caf50'; // Green
-  } else if (percentage >= 50) {
+  if (percentage >= 40) {
+    return '#f44336'; // RED
+  } else if (percentage >= 20) {
     return '#ffeb3b'; // Yellow
   } else {
-    return '#f44336'; // Red
+    return '#4caf50'; // Green
   }
 };
 
 const ScoreRing = ({ percentage, text }) => {
-  const color = getColor(percentage);
+  const color = getColor((percentage/30)*100);
 
   return (
     <div className="score-ring">
       <CircularProgressbar
-        value={percentage}
-        text={`${percentage}%`}
+        value={(percentage/30)* 100}
+        text={`${percentage}`}
         styles={buildStyles({
           pathColor: color,
           trailColor: '#d6d6d6',

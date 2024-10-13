@@ -24,13 +24,11 @@ function executeQuery(query, params = []) {
 
 export const getAllCompanies = async (req, res) => {
     const query = `SELECT name, industry, env_score, logo_url FROM companies;`;
-
     try {
         const companies = await executeQuery(query);
         if (companies.length === 0) {
             return res.status(404).json({ message: 'No companies found' });
         }
-
         res.status(200).json(companies);
     } catch (error) {
         console.error('Error fetching companies:', error);

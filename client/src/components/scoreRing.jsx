@@ -5,7 +5,7 @@ import {
   buildStyles
 } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import './ScoreRing.css'; // Optional: For additional styling
+import './scoreRing.css'; // Optional: For additional styling
 
 // Helper function to determine the color based on percentage
 const getColor = (percentage) => {

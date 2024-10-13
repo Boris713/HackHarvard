@@ -14,7 +14,7 @@ export default function Environmental() {
     const fetchCompanies = async () => {
       try {
 
-        const response = await fetch('http://localhost:5173/api/companies'); 
+        const response = await fetch('http://localhost:5000/api/companies'); 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -94,7 +94,7 @@ export default function Environmental() {
                   <Card.Title>{company.name}</Card.Title>
                   <Card.Text>{company.industry}</Card.Text>
                   <div className="mt-auto">
-                    <ScoreRing percentage={company.env_score} text="Environmental Score" />
+                    <ScoreRing percentage={company.env_score[0]} text="Environmental Score" />
                   </div>
                 </Card.Body>
               </Card>
@@ -111,7 +111,7 @@ export default function Environmental() {
               .map((company, index) => (
                 <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                   {company.name}
-                  <span className="badge bg-primary rounded-pill">{company.env_score}</span>
+                  <span className="badge bg-primary rounded-pill">{company.env_score[0]}</span>
                 </li>
               ))}
           </ul>

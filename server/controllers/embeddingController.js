@@ -60,7 +60,7 @@ export const generateTextEmbedding = async (req, res) => {
     let embedding; // Declare the variable here
     try {
         embedding = await hf.featureExtraction({
-            model: 'sentence-transformers/average_word_embeddings_glove.6B.300d',
+            model: 'sentence-transformers/all-mpnet-base-v2',
             inputs: text,
         });
 

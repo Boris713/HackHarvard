@@ -367,7 +367,6 @@
         "predicted_score_2025": 23.53
     },
     {
-
         "name": "Tesla",
         "industry": "Automotive",
         "location": "USA",
@@ -1219,4 +1218,3 @@
         "predicted_score_2025": 30.0
     }
 ]
-

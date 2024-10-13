@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
 import Header from './header';
 import CompanyInfoModal from './modal';
 import axios from 'axios';  // Import Axios for making API calls
+=======
+// src/components/CompanyInfoModal.jsx
+import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { Container, Row, Col, Card, ProgressBar } from 'react-bootstrap';
+>>>>>>> 006dadf27cc4dcc1371ce98b3ea2902715bd0587
 
 export default function EsgPage({ category, title }) {
   const [companies, setCompanies] = useState([]);
@@ -85,6 +93,7 @@ export default function EsgPage({ category, title }) {
           ))}
         </Row>
 
+<<<<<<< HEAD
         {/* Modal */}
         <CompanyInfoModal
           show={modalShow}
@@ -106,5 +115,55 @@ export default function EsgPage({ category, title }) {
         </div>
       </Container>
     </div>
+=======
+          <Row>
+            <Col>
+              <h5>Environmental Score</h5>
+              <ProgressBar 
+                variant="success" 
+                now={recentESG.environmental_score} 
+                label={`${recentESG.environmental_score}%`} 
+              />
+            </Col>
+            <Col>
+              <h5>Social Score</h5>
+              <ProgressBar 
+                variant="info" 
+                now={recentESG.social_score} 
+                label={`${recentESG.social_score}%`} 
+              />
+            </Col>
+            <Col>
+              <h5>Governance Score</h5>
+              <ProgressBar 
+                variant="warning" 
+                now={recentESG.governance_score} 
+                label={`${recentESG.governance_score}%`} 
+              />
+            </Col>
+          </Row>
+
+          <Row className="mt-4">
+            <Col>
+              <h5>Performance Graph</h5>
+              <div 
+                style={{ 
+                  height: '300px', 
+                  backgroundColor: '#f5f5f5', 
+                  textAlign: 'center', 
+                  lineHeight: '300px' 
+                }}
+              >
+                <strong>[Graph Placeholder]</strong>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={onHide}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+>>>>>>> 006dadf27cc4dcc1371ce98b3ea2902715bd0587
   );
 }

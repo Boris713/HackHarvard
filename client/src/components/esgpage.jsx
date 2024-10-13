@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Container, Row, Col, Spinner } from 'react-bootstrap';
 import Header from './header'; // Assuming the Header is located in this path
+import CompanyInfoModal from './modal'; // Import the modal component
 
 // Mock Data
 const mockCompanies = [
@@ -8,6 +9,8 @@ const mockCompanies = [
     id: "1",
     name: "XYZ Corp",
     description: "A leading technology company.",
+    industry: "Technology",
+    location: "San Francisco, CA",
     esg_scores: [
       { year: 2023, environmental_score: 75, social_score: 65, governance_score: 80 }
     ],
@@ -16,6 +19,8 @@ const mockCompanies = [
     id: "2",
     name: "ABC Industries",
     description: "A top player in manufacturing.",
+    industry: "Manufacturing",
+    location: "Chicago, IL",
     esg_scores: [
       { year: 2023, environmental_score: 60, social_score: 70, governance_score: 85 }
     ],
@@ -24,6 +29,8 @@ const mockCompanies = [
     id: "3",
     name: "SmallBiz Inc.",
     description: "A small retail business.",
+    industry: "Retail",
+    location: "Austin, TX",
     esg_scores: [
       { year: 2023, environmental_score: 80, social_score: 55, governance_score: 90 }
     ],
@@ -34,6 +41,8 @@ export default function EsgPage({ category, title }) {
   const [companies, setCompanies] = useState([]);
   const [rankedCompanies, setRankedCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalShow, setModalShow] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState(null); // Track selected company
 
   useEffect(() => {
     // Mock data fetching and sorting
@@ -55,6 +64,11 @@ export default function EsgPage({ category, title }) {
     fetchData();
   }, [category]);
 
+  const handleCardClick = (company) => {
+    setSelectedCompany(company); // Set the selected company for modal
+    setModalShow(true); // Show the modal
+  };
+
   if (loading) {
     return <Spinner animation="border" variant="primary" />;
   }
@@ -70,7 +84,7 @@ export default function EsgPage({ category, title }) {
         <Row className="mb-5">
           {companies.slice(0, 3).map((company, index) => (
             <Col key={index} md={4} className="mb-4">
-              <Card>
+              <Card onClick={() => handleCardClick(company)} style={{ cursor: 'pointer' }}>
                 <Card.Body>
                   <Card.Title>{company.name}</Card.Title>
                   <Card.Text>{company.description}</Card.Text>
@@ -80,6 +94,13 @@ export default function EsgPage({ category, title }) {
             </Col>
           ))}
         </Row>
+
+        {/* Modal */}
+        <CompanyInfoModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          company={selectedCompany} // Pass the selected company data
+        />
 
         {/* Ranked List Section */}
         <div>

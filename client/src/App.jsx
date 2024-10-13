@@ -1,6 +1,8 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/home"; // Assuming Home is in the correct path
+import Environmental from "./pages/environmental";
 import Home from "./pages/home"; // Ensure correct casing
 import Environmental from "./pages/environmental";
 import Social from "./pages/Social";

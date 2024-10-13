@@ -1,0 +1,14 @@
+.addCompanyContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.addButton{
+    width:6vh;
+}
+#longCard{
+    margin-top:4vh;
+
+    margin-bottom:7vh;
+}

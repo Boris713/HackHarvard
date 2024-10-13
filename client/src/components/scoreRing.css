@@ -1,0 +1,14 @@
+/* src/components/ScoreRing.css */
+.score-ring {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto; /* Center the ring */
+  }
+  
+  .score-text {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: #555;
+  }
+  

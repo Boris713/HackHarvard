@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../index.css"; // Ensure your custom styles are imported
-
+import "./header.css"
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -10,15 +10,13 @@ export default function Header() {
 
   return (
     <header
-      className="bg-primary text-white fixed-top w-100"
+      className="text-white fixed-top w-100"
       style={{ zIndex: "1000", height: "60px" }}
     >
       <div className="container h-100">
         <div className="row align-items-center h-100">
           {/* EcoTrackr title in the center */}
-          <div className="col text-center">
-            <h1 className="h3">EcoTrackr</h1>
-          </div>
+  
 
           {/* Search bar on the right */}
           <div className="col d-flex justify-content-end">

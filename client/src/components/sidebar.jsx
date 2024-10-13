@@ -1,7 +1,8 @@
+// src/components/Sidebar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import NavSelection from "./NavSelection"; // Your custom button component
 import { Button } from "react-bootstrap";
+import './sidebar.css';
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
@@ -24,23 +25,41 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <div
-        className={`d-flex flex-column bg-primary text-white ${
+        className={`d-flex flex-column text-white sidebar-border ${
           isOpen ? "d-block" : "d-none"
         } d-md-flex`}
         style={{
           width: "250px",
           position: "fixed",
-          top: "60px", // Height of the header
+          top: "0px", // Height of the header
           left: "0",
           height: "calc(100% - 60px)", // Full height minus header
           transition: "all 0.3s",
+          border: "1px",
         }}
       >
-        <NavSelection>
-          <Link to="/environmental" className="nav-link text-white text-center py-3">
-            Env
-          </Link>
-        </NavSelection>
+        
+        <div className="buttoncontainer">
+          {/* Refactored Buttons */}
+          <h1 className="title">Envest</h1>
+
+          <Button
+            as={Link}
+            to="/environmental"
+            className="butt mb-2"
+            variant="light"
+          >
+            Explore
+          </Button>
+          <Button
+            as={Link}
+            to="/portfolio"
+            className="butt mb-2"
+            variant="light"
+          >
+            Portfolio
+          </Button>
+        </div>
       </div>
     </>
   );

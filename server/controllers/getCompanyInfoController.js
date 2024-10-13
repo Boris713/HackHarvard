@@ -108,7 +108,6 @@ export const getCompaniesByUser = async (req, res) => {
 export const addCompanyToUser = async (req, res) => {
     const { userID, companyName } = req.body;
 
-    // Check if the required fields are present
     if (!userID || !companyName) {
         return res.status(400).json({ message: 'User ID and company name are required' });
     }
@@ -128,7 +127,7 @@ export const addCompanyToUser = async (req, res) => {
 
         // Check if the companies field is an array (if stored as JSON)
         if (!Array.isArray(companiesField)) {
-            companiesField = JSON.parse(companiesField) || []; // Parse as JSON or set an empty array
+            companiesField = JSON.parse(companiesField) || [];
         }
 
         // Check if the company already exists in the user's companies list
@@ -142,10 +141,130 @@ export const addCompanyToUser = async (req, res) => {
         // Update the companies field in the user profile
         await executeQuery(updateUserCompaniesQuery, [JSON.stringify(companiesField), userID]);
 
+        // Update the personalized sustainability score
+        await updatePersonalizedSustainabilityScore(userID);
+
         res.status(200).json({ message: `Successfully added ${companyName} to user ${userID}` });
 
     } catch (error) {
         console.error('Error adding company to user:', error);
         res.status(500).json({ message: 'Error adding company to user.', details: error.message });
+    }
+};
+
+export const deleteCompanyFromUser = async (req, res) => {
+    const { userID, companyName } = req.body;
+
+    if (!userID || !companyName) {
+        return res.status(400).json({ message: 'User ID and company name are required' });
+    }
+
+    const getUserCompaniesQuery = `SELECT companies FROM user_profiles WHERE ID = ?;`;
+    const updateUserCompaniesQuery = `UPDATE user_profiles SET companies = ? WHERE ID = ?;`;
+
+    try {
+        // Fetch the user's current list of companies
+        const userProfile = await executeQuery(getUserCompaniesQuery, [userID]);
+
+        if (userProfile.length === 0) {
+            return res.status(404).json({ message: 'User profile not found' });
+        }
+
+        let companiesField = userProfile[0].companies;
+
+        // Check if the companies field is an array (if stored as JSON)
+        if (!Array.isArray(companiesField)) {
+            companiesField = JSON.parse(companiesField) || [];
+        }
+
+        // Check if the company exists in the user's companies list
+        const companyIndex = companiesField.indexOf(companyName);
+        if (companyIndex === -1) {
+            return res.status(400).json({ message: 'Company not found in the user\'s companies list' });
+        }
+
+        // Remove the company from the list
+        companiesField.splice(companyIndex, 1);
+
+        // Update the companies field in the user profile
+        await executeQuery(updateUserCompaniesQuery, [JSON.stringify(companiesField), userID]);
+
+        // Update the personalized sustainability score
+        await updatePersonalizedSustainabilityScore(userID);
+
+        res.status(200).json({ message: `Successfully removed ${companyName} from user ${userID}` });
+
+    } catch (error) {
+        console.error('Error removing company from user:', error);
+        res.status(500).json({ message: 'Error removing company from user.', details: error.message });
+    }
+};
+
+export const updateUserScore = async (req, res) => {
+    const { userID } = req.body;
+
+    if (!userID) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    try {
+        await updatePersonalizedSustainabilityScore(userID);
+        res.status(200).json({ message: `Updated personalized sustainability score for user ${userID}` });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating personalized sustainability score', details: error.message });
+    }
+};
+
+// Function to update the personalized sustainability score
+export const updatePersonalizedSustainabilityScore = async (userID) => {
+    const getUserCompaniesQuery = `SELECT companies FROM user_profiles WHERE ID = ?;`;
+    const getCompanyScoresQuery = `
+        SELECT env_score FROM companies 
+        WHERE name IN (?) 
+        ORDER BY name ASC, env_score DESC;
+    `;
+    const updateUserScoreQuery = `UPDATE user_profiles SET personalized_sustainability_score = ? WHERE ID = ?;`;
+
+    try {
+        // Fetch the user's current list of companies
+        const userProfile = await executeQuery(getUserCompaniesQuery, [userID]);
+
+        if (userProfile.length === 0) {
+            throw new Error('User profile not found');
+        }
+
+        let companiesField = userProfile[0].companies;
+
+        // Check if the companies field is an array (if stored as JSON)
+        if (!Array.isArray(companiesField)) {
+            companiesField = JSON.parse(companiesField) || [];
+        }
+
+        // If no companies, set the score to 0
+        if (companiesField.length === 0) {
+            await executeQuery(updateUserScoreQuery, [0, userID]);
+            return;
+        }
+
+        // Fetch the most recent env_score for each company in the user's companies list
+        const placeholders = companiesField.map(() => '?').join(',');
+        const recentScores = await executeQuery(getCompanyScoresQuery.replace('?', placeholders), companiesField);
+
+        // Make sure we have scores for each company
+        if (recentScores.length === 0) {
+            await executeQuery(updateUserScoreQuery, [0, userID]);
+            return;
+        }
+
+        // Calculate the average env_score across all fetched companies
+        const totalScore = recentScores.reduce((sum, score) => sum + parseFloat(score.env_score), 0);
+        const averageScore = totalScore / recentScores.length;
+
+        // Update the personalized_sustainability_score in user_profiles
+        await executeQuery(updateUserScoreQuery, [averageScore, userID]);
+
+    } catch (error) {
+        console.error('Error updating personalized sustainability score:', error);
+        throw new Error('Error updating personalized sustainability score.');
     }
 };

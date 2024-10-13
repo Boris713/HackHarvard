@@ -7,7 +7,9 @@
     "firebase": "^10.14.1",
     "flask": "^0.2.10",
     "mysql2": "^3.11.3",
-    "node-fetch": "^3.3.2"
+
+    "node-fetch": "^3.3.2",
+    "react-circular-progressbar": "^2.1.0"
   },
   "name": "server",
   "version": "1.0.0",

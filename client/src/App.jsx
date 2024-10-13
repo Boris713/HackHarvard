@@ -7,6 +7,8 @@ import Header from "./components/header"; // Import Header
 import Sidebar from "./components/sidebar"; // Import Sidebar
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Portfolio from "./pages/portfolio";
+import ImproveScore from "./pages/ImproveScore";
+import SearchResults from "./components/SearchResults";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/environmental" element={<Environmental />} />
             <Route path="/portfolio" element={<Portfolio/>}></Route>
+            <Route path="/improve-score" element={<ImproveScore />} />
+            <Route path="/search-results" element={<SearchResults />} />
           </Routes>
         </div>
       </div>

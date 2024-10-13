@@ -4,6 +4,7 @@ import embeddingRoutes from './routes/embeddingRoutes.js';
 import cors from 'cors';
 
 
+
 dotenv.config();
 const app = express();
 

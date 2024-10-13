@@ -4,6 +4,8 @@ import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 import Header from '../components/header'; // Assuming the Header is located in this path
 import './portfolio.css';
 import ScoreRing from '../components/scoreRing'; // Import the ScoreRing component
+import { useNavigate } from 'react-router-dom';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 // Sample data for the cards and ranked list
 const companies = [
@@ -11,14 +13,42 @@ const companies = [
   { name: "Company 2", score: 65, description: "Investing in sustainable agriculture and clean energy." },
   { name: "Company 3", score: 23, description: "Committed to reducing plastic waste and improving recycling processes." },
 ];
-import ProgressBar from 'react-bootstrap/ProgressBar';
-function getProgressVariant(score) {
-    if (score >= 80) return 'success';      // Green
-    if (score >= 60) return 'warning';      // Orange
-    return 'danger';                        // Red
-  }
 
 export default function Portfolio() {
+  const navigate = useNavigate();
+  function getProgressVariant(score) {
+      if (score >= 80) return 'success';      // Green
+      if (score >= 60) return 'warning';      // Orange
+      return 'danger';                        // Red
+  }
+
+  const handleImproveScoreClick = async () => {
+    console.log("Button clicked!"); // Check if the button click is registered
+  
+    try {
+      const response = await fetch('http://localhost:5000/api/companies');
+      if (!response.ok) {
+        throw new Error('Failed to fetch companies');
+      }
+  
+      const companies = await response.json();
+      console.log("Companies fetched:", companies); // Log the fetched companies
+  
+      const sortedCompanies = companies.sort(
+        (a, b) => b.env_score[0] - a.env_score[0]
+      );
+  
+      console.log("Sorted companies:", sortedCompanies); // Log the sorted companies
+  
+      // Navigate with the sorted companies data
+      navigate('/improve-score', { state: { companies: sortedCompanies } });
+    } catch (error) {
+      console.error('Error fetching companies:', error);
+    }
+  };
+  
+
+
   return (
     <div>
       <Header />
@@ -38,7 +68,7 @@ export default function Portfolio() {
                       variant={getProgressVariant(80)}
                       ></ProgressBar>
                       <br></br>
-            <Button variant="primary">Improve your score</Button>
+            <Button variant="primary" onClick={handleImproveScoreClick}>Improve your score</Button>
           </Card.Body>
           <Card.Footer className="text-muted"></Card.Footer>
         </Card>

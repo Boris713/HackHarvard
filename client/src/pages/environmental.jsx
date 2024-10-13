@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 import Header from '../components/header'; // Assuming the Header is located in this path
-import SustainabilityChart from '../components/SustainibilityChart';
+// import SustainabilityChart from '../components/SustainibilityChart';
 // Sample data for the cards and ranked list
 const companies = [
   { name: "Company 1", score: 95, description: "Focused on reducing emissions and renewable energy adoption." },
@@ -26,7 +26,7 @@ export default function Environmental() {
         <p>
           Welcome to the Environmental page! Here you can find information about companies' environmental performance.
         </p>
-      <SustainabilityChart selectedCompany = {'Sweetgreen'}/>
+      {/* <SustainabilityChart selectedCompany = {'Sweetgreen'}/> */}
         {/* Cards Section */}
         <Row className="mb-5">
           {companies.map((company, index) => (

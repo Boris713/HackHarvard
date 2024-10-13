@@ -41,16 +41,6 @@ export default function Sidebar() {
             Env
           </Link>
         </NavSelection>
-        <NavSelection>
-          <Link to="/social" className="nav-link text-white text-center py-3">
-            Soc
-          </Link>
-        </NavSelection>
-        <NavSelection>
-          <Link to="/governance" className="nav-link text-white text-center py-3">
-            Gov
-          </Link>
-        </NavSelection>
       </div>
     </>
   );
